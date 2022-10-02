@@ -1,0 +1,19 @@
+float d = 0;
+float n = 20;
+float s = 0.01;
+float3 c = 0;
+float3 cols[] = {float3(1, 1, 0), float3(0, 1, 1), float3(1, 0, 1)};
+float2 adjUV = UV * AspectRatio;
+for (int i = 0; i < n; i++) {
+    float2 v = float2(
+              frac((i + 123) * 123.456), 
+              frac((i + 654) * 654.321)
+    ) * 0.25;
+    float2 p = abs(frac(v * Time) * 2 - 1) * AspectRatio;
+    float b = s / distance(adjUV, p);
+    d += b;
+    c += clamp(b, 0, 0.1) * cols[i % 3];
+}
+float mb = s / distance(adjUV, MousePos * AspectRatio);
+d += mb;
+return pow(smoothstep(1, 1.1, d), 0.2) * c;
